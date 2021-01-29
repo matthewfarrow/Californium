@@ -1,35 +1,30 @@
 pragma solidity >0.5.99 <0.8.0;
 
 contract Californium {
-    // The keyword "public" makes variables
-    // accessible from other contracts
-    address public minter;
-    mapping (address => uint) public balances;
+    // Track how many tokens are owned by each address.
+    mapping (address => uint256) public balanceOf;
 
-    // Events allow clients to react to specific
-    // contract changes you declare
-    event Sent(address from, address to, uint amount);
+    // Modify this section
+    string public name = "Californium";
+    string public symbol = "CAL";
+    uint8 public decimals = 16;
+    uint256 public totalSupply = 1000 * (uint256(1) ** decimals);
 
-    // Constructor code is only run when the contract
-    // is created
-    constructor() {
-        minter = msg.sender;
+    event Transfer(address indexed from, address indexed to, uint256 value);
+
+    constructor() public{
+        // Initially assign all tokens to the contract's creator.
+        balanceOf[msg.sender] = totalSupply;
+        emit Transfer(address(0), msg.sender, totalSupply);
     }
 
-    // Sends an amount of newly created coins to an address
-    // Can only be called by the contract creator
-    function mint(address receiver, uint amount) public {
-        require(msg.sender == minter);
-        require(amount < 1e60);
-        balances[receiver] += amount;
+    function transfer(address to, uint256 value) public returns (bool success) {
+        require(balanceOf[msg.sender] >= value);
+
+        balanceOf[msg.sender] -= value;  // deduct from sender's balance
+        balanceOf[to] += value;          // add to recipient's balance
+        emit Transfer(msg.sender, to, value);
+        return true;
     }
 
-    // Sends an amount of existing coins
-    // from any caller to an address
-    function send(address receiver, uint amount) public {
-        require(amount <= balances[msg.sender], "Insufficient balance.");
-        balances[msg.sender] -= amount;
-        balances[receiver] += amount;
-        emit Sent(msg.sender, receiver, amount);
-    }
 }
