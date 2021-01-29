@@ -1,6 +1,6 @@
 pragma solidity >0.5.99 <0.8.0;
 
-contract Coin {
+contract Californium {
     // The keyword "public" makes variables
     // accessible from other contracts
     address public minter;
