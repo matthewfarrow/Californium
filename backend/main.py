@@ -14,7 +14,7 @@ w3provider = Web3.HTTPProvider("https://"+network+".infura.io/v3/"+projectId)
 
 w3 = Web3(w3provider)
 
-PORT = 8083
+PORT = 8080
 
 frontend_dir = os.path.join(os.path.dirname(__file__), '..', 'frontend')
 
@@ -31,7 +31,11 @@ class MyHandler(http.server.BaseHTTPRequestHandler):
                 self.wfile.write(f.read())
 
         else:
-            self.send_error(404)
+            self.send_response(404)
+            self.send_header("Content-type", "text/html")
+            self.end_headers()
+            with open(os.path.join(frontend_dir, '404.html'), 'rb') as f:
+                self.wfile.write(f.read())
 
 handler = MyHandler
 
