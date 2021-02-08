@@ -14,23 +14,22 @@ w3provider = Web3.HTTPProvider("https://"+network+".infura.io/v3/"+projectId)
 
 w3 = Web3(w3provider)
 
-PORT = 8080
+PORT = 8083
+
+frontend_dir = os.path.join(os.path.dirname(__file__), '..', 'frontend')
 
 class MyHandler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
         """Respond to a GET request."""
-        if self.path == "/":
+
+        path = os.path.join(frontend_dir, self.path[1:])
+        if os.path.isfile(path):
             self.send_response(200)
             self.send_header("Content-type", "text/html")
             self.end_headers()
-            self.wfile.write('OOF'.encode())
-        elif self.path == '/s':
-            content_type = 'text/html'
-            content = 'bullshit detected, reboot computer now'
-            self.send_response(200)
-            self.send_header("Content-type", content_type)
-            self.end_headers()
-            self.wfile.write(content.encode())
+            with open(path, 'rb') as f:
+                self.wfile.write(f.read())
+
         else:
             self.send_error(404)
 
