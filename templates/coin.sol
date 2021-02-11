@@ -1,17 +1,27 @@
-// SPDX-License-Identifier: GPL-3.0
+//SPDX license identifier
 pragma solidity >0.5.99 <0.8.0;
 
 contract Coin {
-    //create address that is pubically visible
-    address public minter;
     
-    //maps the balance to the adress in a dictionary
+    address public minter;
     mapping (address => uint) public balances;
     
-    //event allows people to see and react to action
     event Sent(address from, address to, uint amount);
     
     constructor() {
         minter = msg.sender;
+    }
+    
+    function mint(address reciver, uint amount) public {
+        require(msg.sender == minter);
+        require(amount < 1e8);
+        balances[reciver] += amount;
+    }
+    
+    function Send(address reciver, uint amount) public {
+        require(amount < balances[reciver]);
+        balances[msg.sender] += amount;
+        balances[reciver] += amount;
+        emit Sent(msg.sender, reciver, amount/2);
     }
 }
