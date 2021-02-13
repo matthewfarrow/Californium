@@ -40,5 +40,8 @@ class MyHandler(http.server.BaseHTTPRequestHandler):
 handler = MyHandler
 
 with socketserver.TCPServer(("", PORT), handler) as httpd:
-    print("Server started at localhost:" + str(PORT))
-    httpd.serve_forever()
+    try:
+        print("Server started at localhost:" + str(PORT))
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        httpd.server_close()
