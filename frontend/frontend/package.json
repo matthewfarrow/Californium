@@ -1,6 +1,6 @@
 {
     "title": "Simple Sidebar",
-    "name": "startbootstrap-simple-sidebar",
+    "name": "frontend",
     "version": "5.1.3",
     "scripts": {
         "start": "node_modules/.bin/gulp watch"
