@@ -16,7 +16,33 @@ w3 = Web3(w3provider)
 
 PORT = 8080
 
-frontend_dir = os.path.join(os.path.dirname(__file__), '..', 'frontend')
+frontend_dir = os.path.join(os.path.dirname(__file__), '..', 'frontend/startbootstrap-simple-sidebar-gh-pages')
+
+def filenameToMimeType(filename):
+    if not '.' in filename:
+        return 'application/octet-stream'
+
+    ext = filename.split('.')[-1]
+
+    types = {
+        'css': 'text/css',
+        'htm': 'text/html',
+        'html': 'text/html',
+        'jpeg': 'image/jpeg',
+        'jpg': 'image/jpeg',
+        'js': 'text/javascript',
+        'json': 'application/json',
+        'png': 'image/png',
+        'txt': 'text/plain',
+        'pdf': 'application/pdf',
+        'xhtml': 'application/xhtml+xml',
+        'gif': 'image/gif',
+    }
+
+    if not ext in types.keys():
+        return 'application/octet-stream'
+
+    return types[ext]
 
 class MyHandler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
@@ -25,7 +51,8 @@ class MyHandler(http.server.BaseHTTPRequestHandler):
         path = os.path.join(frontend_dir, self.path[1:])
         if os.path.isfile(path):
             self.send_response(200)
-            self.send_header("Content-type", "text/html")
+            print(path, filenameToMimeType(os.path.basename(path)))
+            self.send_header("Content-type", filenameToMimeType(os.path.basename(path)))
             self.end_headers()
             with open(path, 'rb') as f:
                 self.wfile.write(f.read())
